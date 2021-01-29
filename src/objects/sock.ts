@@ -11,7 +11,7 @@ export class Sock extends Phaser.GameObjects.Image {
 		this.scene.add.existing(this);
 	}
 
-	private initVariables(): void { }
+	private initVariables(): void {}
 
 	private initImage(): void {
 		this.setOrigin(0.5, 0.5);
