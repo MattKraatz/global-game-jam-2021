@@ -1,3 +1,4 @@
+import { Physics } from 'phaser';
 import { GameScene } from './scenes/game-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
@@ -13,5 +14,12 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
 		keyboard: true
 	},
 	backgroundColor: '#3A99D9',
-	render: { pixelArt: false, antialias: false }
+	render: { pixelArt: false, antialias: false },
+	physics: {
+		default: 'arcade',
+		arcade: {
+			debug: false,
+			gravity: { y: 0 }
+		}
+	}
 };

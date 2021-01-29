@@ -1,9 +1,11 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
+import { ThrowableGroup } from "../objects/throwable";
 
 export class GameScene extends Phaser.Scene {
 	private background: Phaser.GameObjects.Image;
-	private socks: Array<Sock>;
+	private collectables: Array<Sock>;
+	private throwables: ThrowableGroup;
 	private ammoText: Phaser.GameObjects.Text;
 	private ammo: number;
 	private player: Player;
@@ -18,6 +20,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image('background', './assets/images/background.png');
 		this.load.image('player', './assets/images/player.png');
 		this.load.image('sock', './assets/images/sock.png');
+		this.load.image('throwable', './assets/images/throwable.png');
 	}
 
 	init(): void {
@@ -25,12 +28,16 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	create(): void {
+		// initialize throwables
+		this.throwables = new ThrowableGroup(this);
+		this.input.keyboard.on('keydown-SPACE', (e: any) => this.throwThrowable(e));
+
 		// create background
 		this.background = this.add.image(0, 0, 'background');
 		this.background.setOrigin(0, 0);
 
 		// create objects
-		this.socks = this.createSocks(12);
+		this.collectables = this.createSocks(12);
 		this.player = new Player({
 			scene: this,
 			x: this.sys.canvas.width / 2,
@@ -54,9 +61,11 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	update(): void {
-		// update objects
+		// update player
 		this.player.update();
-		this.socks = this.socks.filter(c => {
+
+		// pick up collectables
+		this.collectables = this.collectables.filter(c => {
 			if (
 				Phaser.Geom.Intersects.RectangleToRectangle(
 					this.player.getBounds(),
@@ -70,6 +79,10 @@ export class GameScene extends Phaser.Scene {
 				return true;
 			}
 		});
+	}
+
+	private throwThrowable(event: any) {
+		this.throwables.sendIt(this.player.x, this.player.y);
 	}
 
 	private updateCoinStatus(): void {
