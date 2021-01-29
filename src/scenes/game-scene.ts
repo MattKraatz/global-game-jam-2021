@@ -1,11 +1,11 @@
-import { Coin } from '../objects/coin';
+import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
 
 export class GameScene extends Phaser.Scene {
   private background: Phaser.GameObjects.Image;
-  private coin: Coin;
-  private coinsCollectedText: Phaser.GameObjects.Text;
-  private collectedCoins: number;
+  private socks: Array<Sock>;
+  private ammoText: Phaser.GameObjects.Text;
+  private ammo: number;
   private player: Player;
 
   constructor() {
@@ -17,11 +17,11 @@ export class GameScene extends Phaser.Scene {
   preload(): void {
     this.load.image('background', './assets/images/background.png');
     this.load.image('player', './assets/images/player.png');
-    this.load.image('coin', './assets/images/coin.png');
+    this.load.image('sock', './assets/images/sock.png');
   }
 
   init(): void {
-    this.collectedCoins = 0;
+    this.ammo = 0;
   }
 
   create(): void {
@@ -30,12 +30,7 @@ export class GameScene extends Phaser.Scene {
     this.background.setOrigin(0, 0);
 
     // create objects
-    this.coin = new Coin({
-      scene: this,
-      x: Phaser.Math.RND.integerInRange(100, 700),
-      y: Phaser.Math.RND.integerInRange(100, 500),
-      texture: 'coin'
-    });
+    this.socks = this.createSocks(12);
     this.player = new Player({
       scene: this,
       x: this.sys.canvas.width / 2,
@@ -44,10 +39,10 @@ export class GameScene extends Phaser.Scene {
     });
 
     // create texts
-    this.coinsCollectedText = this.add.text(
-      this.sys.canvas.width / 2,
+    this.ammoText = this.add.text(
+      (this.sys.canvas.width / 2) - 50,
       this.sys.canvas.height - 50,
-      this.collectedCoins + '',
+      'Ammo: ' + this.ammo.toString(),
       {
         fontFamily: 'Arial',
         fontSize: 38,
@@ -61,22 +56,32 @@ export class GameScene extends Phaser.Scene {
   update(): void {
     // update objects
     this.player.update();
-    this.coin.update();
-
-    // do the collision check
-    if (
-      Phaser.Geom.Intersects.RectangleToRectangle(
-        this.player.getBounds(),
-        this.coin.getBounds()
-      )
-    ) {
-      this.updateCoinStatus();
-    }
+    this.socks = this.socks.filter(c => {
+      if (Phaser.Geom.Intersects.RectangleToRectangle(this.player.getBounds(),c.getBounds())) {
+        c.destroy();
+        this.updateCoinStatus();
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 
   private updateCoinStatus(): void {
-    this.collectedCoins++;
-    this.coinsCollectedText.setText(this.collectedCoins + '');
-    this.coin.changePosition();
+    this.ammo++;
+    this.ammoText.setText('Ammo: ' + this.ammo.toString());
+  }
+
+  private createSocks(howMany: number) {
+    const socks = [];
+    for(let i = 0; i < howMany; i++) {
+      socks.push(new Sock({
+        scene: this,
+        x: Phaser.Math.RND.integerInRange(100, 700),
+        y: Phaser.Math.RND.integerInRange(100, 500),
+        texture: 'sock'
+      }));
+    }
+    return socks;
   }
 }
