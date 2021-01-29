@@ -1,0 +1,6 @@
+dist
+assets
+*.html
+*.json
+*.md
+*.config.js
