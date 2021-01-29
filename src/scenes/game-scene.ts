@@ -2,7 +2,10 @@ import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
 
 export class GameScene extends Phaser.Scene {
-  private background: Phaser.GameObjects.Image;
+  // tilemap
+  private map: Phaser.Tilemaps.Tilemap;
+  private tileset: Phaser.Tilemaps.Tileset;
+  private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
   private socks: Array<Sock>;
   private ammoText: Phaser.GameObjects.Text;
   private ammo: number;
@@ -14,20 +17,26 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  preload(): void {
-    this.load.image('background', './assets/images/background.png');
-    this.load.image('player', './assets/images/player.png');
-    this.load.image('sock', './assets/images/sock.png');
-  }
-
   init(): void {
+    this.registry.set('level', 'city');
     this.ammo = 0;
   }
 
   create(): void {
-    // create background
-    this.background = this.add.image(0, 0, 'background');
-    this.background.setOrigin(0, 0);
+    // create our tilemap from Tiled JSON
+    this.map = this.make.tilemap({key: 'city'});
+    // add our tileset and layers to our tilemap
+    this.tileset = this.map.addTilesetImage('sneakerhead tileset');
+    this.foregroundLayer = this.map.createStaticLayer(
+      'Tile Layer 1',
+      this.tileset,
+      0,
+      0
+    );
+    this.foregroundLayer.setName('Tile Layer 1');
+
+    // set collision for tiles with the property collide set to true
+    this.foregroundLayer.setCollisionByProperty({ collide: true });
 
     // create objects
     this.socks = this.createSocks(12);
@@ -38,19 +47,32 @@ export class GameScene extends Phaser.Scene {
       texture: 'player'
     });
 
+    // Colliders
+    this.physics.add.collider(this.player, this.foregroundLayer);
+
+    // Camera
+    this.cameras.main.startFollow(this.player);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.map.widthInPixels,
+      this.map.heightInPixels
+    );
+    this.cameras.roundPixels = true;
+
     // create texts
     this.ammoText = this.add.text(
-      (this.sys.canvas.width / 2) - 50,
-      this.sys.canvas.height - 50,
+      2,
+      2,
       'Ammo: ' + this.ammo.toString(),
       {
         fontFamily: 'Arial',
-        fontSize: 38,
-        stroke: '#fff',
-        strokeThickness: 6,
-        fill: '#000000'
+        fontSize: 10,
+        fill: '#ffffff'
       }
     );
+    this.ammoText.scrollFactorX = 0;
+    this.ammoText.scrollFactorY = 0;
   }
 
   update(): void {
