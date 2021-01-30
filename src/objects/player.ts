@@ -70,5 +70,12 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.body.setVelocityX(0);
       this.body.setVelocityY(0);
     }
+
+    if (Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y) > 1) {
+      this.anims.play("PlayerWalk", true);
+    }
+    else {
+       this.setFrame(0);
+    }
   }
 }

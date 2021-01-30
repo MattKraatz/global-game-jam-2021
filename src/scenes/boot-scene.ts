@@ -1,3 +1,4 @@
+import { AnimationHelper } from '../helpers/animation-helper';
 
 export class BootScene extends Phaser.Scene {
   // helpers
@@ -38,6 +39,10 @@ export class BootScene extends Phaser.Scene {
     this.load.on(
       'complete',
       function () {
+        this.animationHelperInstance = new AnimationHelper(
+          this,
+          this.cache.json.get('animationJSON')
+        );
         this.progressBar.destroy();
         this.loadingBar.destroy();
       },
