@@ -12,6 +12,15 @@
 			},
 			{
 				"type": "spritesheet",
+				"key": "enemy",
+				"url": "./assets/images/enemy.png",
+				"frameConfig": {
+					"frameWidth": 16,
+					"frameHeight": 18
+				}
+			},
+			{
+				"type": "spritesheet",
 				"key": "playerProjectile",
 				"url": "./assets/images/player projectile.png",
 				"frameConfig": {

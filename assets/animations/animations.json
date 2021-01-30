@@ -12,14 +12,14 @@
       "frameRate": 18
     },
     {
-      "key": "PlayerIdle",
+      "key": "enemyWalk",
       "frames": {
         "typeOfGeneration": "generateFrameNumbers",
-        "key": "player",
-        "start": 0,
-        "end": 0
+        "key": "enemy",
+        "start": 1,
+        "end": 4
       },
-      "repeat": 0,
+      "repeat": -1,
       "frameRate": 18
     },
     {

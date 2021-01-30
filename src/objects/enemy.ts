@@ -23,7 +23,6 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		this.scene.add.existing(this);
 		this.body.setSize(8, 12);
 		this.body.setOffset(4, 5);
-
 		this.updateVelocity();
 	}
 
@@ -37,8 +36,8 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 	}
 
 	private initImage(): void {
-		this.setOrigin(0.5, 0.5);
-		this.anims.play("PlayerWalk", true);
+		this.setOrigin(0, 0);
+		this.anims.play("enemyWalk", true);
 		this.currentScene.physics.world.enable(this);
 	}
 

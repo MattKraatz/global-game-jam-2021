@@ -48,6 +48,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 		this.setActive(true);
         this.setVisible(true);
 
+        // BUG: The timeout is seemingly the cause of a bug that prevents
+        // collision with enemies from being detected sometimes. We should
+        // probably just let projectiles go until they exit the map anyway.
         setTimeout(() => this.fall(), this.fallTime);
 
         const cursor = this.getCursorPosition();
@@ -57,9 +60,18 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     
     fall() {
         this.body.reset(0, 0);
-        this.setVelocity(0);
+
+        // Setting the angular velocity to 0 wasn't seeming to stop it for some
+        // reason.
+        this.body.setVelocityX(0);
+        this.body.setVelocityY(0);
+
+        // see ya later
+        this.x = -1000;
+        this.y = -1000;
+
         this.setActive(false);
-		this.setVisible(false);
+        this.setVisible(false);
     }
 
     private getCursorPosition() {

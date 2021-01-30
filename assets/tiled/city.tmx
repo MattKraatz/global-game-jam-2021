@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="60">
  <editorsettings>
   <export target="../maps/city.json" format="json"/>
  </editorsettings>
@@ -108,4 +108,91 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 </data>
  </layer>
+ <objectgroup id="3" name="objects">
+  <object id="1" name="player" type="player" x="137" y="120" width="16" height="16"/>
+  <object id="2" name="enemy" type="enemy" x="160" y="240" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="3" name="sock" type="sock" x="80" y="144" width="16" height="16"/>
+  <object id="4" name="sock" type="sock" x="80" y="160" width="16" height="16"/>
+  <object id="6" name="sock" type="sock" x="96" y="160" width="16" height="16"/>
+  <object id="7" name="sock" type="sock" x="96" y="144" width="16" height="16"/>
+  <object id="8" name="sock" type="sock" x="256" y="80" width="16" height="16"/>
+  <object id="9" name="sock" type="sock" x="331" y="137.333" width="16" height="16"/>
+  <object id="10" name="sock" type="sock" x="240" y="176" width="16" height="16"/>
+  <object id="11" name="sock" type="sock" x="384" y="256" width="16" height="16"/>
+  <object id="12" name="sock" type="sock" x="432" y="256" width="16" height="16"/>
+  <object id="13" name="sock" type="sock" x="496" y="112" width="16" height="16"/>
+  <object id="14" name="sock" type="sock" x="479.667" y="132.667" width="16" height="16"/>
+  <object id="15" name="sock" type="sock" x="554" y="143" width="16" height="16"/>
+  <object id="16" name="sock" type="sock" x="544" y="80" width="16" height="16"/>
+  <object id="17" name="sock" type="sock" x="601" y="192" width="16" height="16"/>
+  <object id="18" name="sock" type="sock" x="112" y="352" width="16" height="16"/>
+  <object id="19" name="sock" type="sock" x="128" y="352" width="16" height="16"/>
+  <object id="20" name="sock" type="sock" x="144" y="352" width="16" height="16"/>
+  <object id="21" name="sock" type="sock" x="160" y="352" width="16" height="16"/>
+  <object id="22" name="sock" type="sock" x="176" y="352" width="16" height="16"/>
+  <object id="23" name="sock" type="sock" x="192" y="352" width="16" height="16"/>
+  <object id="24" name="sock" type="sock" x="208" y="352" width="16" height="16"/>
+  <object id="25" name="sock" type="sock" x="208" y="368" width="16" height="16"/>
+  <object id="26" name="sock" type="sock" x="192" y="368" width="16" height="16"/>
+  <object id="27" name="sock" type="sock" x="176" y="368" width="16" height="16"/>
+  <object id="28" name="sock" type="sock" x="160" y="368" width="16" height="16"/>
+  <object id="29" name="sock" type="sock" x="144" y="368" width="16" height="16"/>
+  <object id="30" name="sock" type="sock" x="128" y="368" width="16" height="16"/>
+  <object id="31" name="sock" type="sock" x="112" y="368" width="16" height="16"/>
+  <object id="32" name="sock" type="sock" x="208" y="384" width="16" height="16"/>
+  <object id="33" name="sock" type="sock" x="192" y="384" width="16" height="16"/>
+  <object id="34" name="sock" type="sock" x="176" y="384" width="16" height="16"/>
+  <object id="35" name="sock" type="sock" x="160" y="384" width="16" height="16"/>
+  <object id="36" name="sock" type="sock" x="144" y="384" width="16" height="16"/>
+  <object id="37" name="sock" type="sock" x="128" y="384" width="16" height="16"/>
+  <object id="38" name="sock" type="sock" x="112" y="384" width="16" height="16"/>
+  <object id="39" name="sock" type="sock" x="208" y="400" width="16" height="16"/>
+  <object id="40" name="sock" type="sock" x="192" y="400" width="16" height="16"/>
+  <object id="41" name="sock" type="sock" x="176" y="400" width="16" height="16"/>
+  <object id="42" name="sock" type="sock" x="160" y="400" width="16" height="16"/>
+  <object id="43" name="sock" type="sock" x="144" y="400" width="16" height="16"/>
+  <object id="44" name="sock" type="sock" x="128" y="400" width="16" height="16"/>
+  <object id="45" name="sock" type="sock" x="112" y="400" width="16" height="16"/>
+  <object id="46" name="sock" type="sock" x="208" y="416" width="16" height="16"/>
+  <object id="47" name="sock" type="sock" x="192" y="416" width="16" height="16"/>
+  <object id="48" name="sock" type="sock" x="176" y="416" width="16" height="16"/>
+  <object id="49" name="sock" type="sock" x="160" y="416" width="16" height="16"/>
+  <object id="50" name="sock" type="sock" x="144" y="416" width="16" height="16"/>
+  <object id="51" name="sock" type="sock" x="128" y="416" width="16" height="16"/>
+  <object id="52" name="sock" type="sock" x="112" y="416" width="16" height="16"/>
+  <object id="53" name="enemy" type="enemy" x="411.667" y="320.667" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="54" name="enemy" type="enemy" x="399.333" y="75.3333" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="56" name="enemy" type="enemy" x="80.6667" y="275.667" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="57" name="enemy" type="enemy" x="266" y="531.667" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="58" name="enemy" type="enemy" x="266" y="531.667" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+  <object id="59" name="enemy" type="enemy" x="285.333" y="532" width="16" height="16">
+   <properties>
+    <property name="enemyType" value="basic"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
