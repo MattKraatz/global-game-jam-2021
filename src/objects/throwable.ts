@@ -23,27 +23,36 @@ export class ThrowableGroup extends Phaser.Physics.Arcade.Group {
 }
 
 export class Throwable extends Phaser.Physics.Arcade.Sprite {
-    private velocity: number = 120;
-    private fallTime: number = 600; //ms
+    private velocity: number = 240;
+    private fallTime: number = 420; //ms
 
 	constructor(scene: Phaser.Scene, x: number, y: number) {
-		super(scene, x, y, 'throwable');
-	}
+        super(scene, x, y, 'throwable');
+    }
 
 	sendIt(x: number, y: number, angle: number) {
 		this.body.reset(x, y);
+        this.setAngularVelocity(240);
 
 		this.setActive(true);
         this.setVisible(true);
 
         setTimeout(() => this.fall(), this.fallTime);
 
-        this.setAngle(angle);
-		this.setVelocity(this.velocity);
+        const cursor = this.getCursorPosition();
+        this.scene.physics.moveTo(this, cursor.x, cursor.y, this.velocity);
     }
     
     fall() {
+        this.setAngularVelocity(0);
         this.setActive(false);
 		this.setVisible(false);
+    }
+
+    private getCursorPosition() {
+        return {
+            x: this.scene.cameras.main.scrollX + this.scene.input.activePointer.x,
+            y: this.scene.cameras.main.scrollY + this.scene.input.activePointer.y
+        }
     }
 }
