@@ -3,7 +3,6 @@ import { GameScene } from '../scenes/game-scene';
 
 export class Sock extends Phaser.GameObjects.Sprite {
 
-	private currentScene: Phaser.Scene;
 	private baseY        = 0;
 	private bobCyclePos  = 0;
 	private bobMagnitude = 4;
@@ -13,7 +12,6 @@ export class Sock extends Phaser.GameObjects.Sprite {
 		super(aParams.scene, aParams.x, aParams.y, aParams.texture, aParams.frame);
 
 		this.initVariables();
-		this.currentScene = aParams.scene;
 		this.initImage();
 		this.initEvents();
 

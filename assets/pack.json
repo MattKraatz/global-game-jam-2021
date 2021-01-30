@@ -11,6 +11,15 @@
 				}
 			},
 			{
+				"type": "spritesheet",
+				"key": "playerProjectile",
+				"url": "./assets/images/player projectile.png",
+				"frameConfig": {
+					"frameWidth": 16,
+					"frameHeight": 16
+				}
+			},
+			{
 				"type": "json",
 				"key": "animationJSON",
 				"url": "./assets/animations/animations.json"
@@ -23,11 +32,6 @@
 					"frameWidth": 16,
 					"frameHeight": 16
 				}
-			},
-			{
-				"type": "image",
-				"key": "throwable",
-				"url": "./assets/images/throwable.png"
 			},
 			{
 				"type": "tilemapTiledJSON",
