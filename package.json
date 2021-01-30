@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "webpack && webpack serve",
     "build": "webpack",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "format": "prettier --write ."
   },
   "license": "MIT"
 }
