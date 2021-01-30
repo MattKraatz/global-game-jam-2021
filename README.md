@@ -1,5 +1,6 @@
 # Sneaker Heads
-A game from Nashville for the 2021 Global Game Jam
+A game from The Teddy Longs in Nashville for the 2021 Global Game Jam
+May be hosted via Netlify here: https://gallant-mestorf-8a4786.netlify.app/
 
 # Getting Started
 ## Prerequisites
@@ -16,3 +17,6 @@ Execute the command below from the root of the project. Your browser should open
 ```
 yarn run dev
 ```
+
+# Thanks
+bootstrapped from `coin-runner` at https://github.com/digitsensitive/phaser3-typescript
