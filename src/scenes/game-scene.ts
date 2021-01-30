@@ -1,7 +1,7 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
 import { Enemy } from '../objects/enemy';
-import { Throwable, ThrowableGroup } from '../objects/throwable';
+import { EnemyProjectile, Projectile, ProjectileGroup } from '../objects/projectile';
 
 export class GameScene extends Phaser.Scene {
 	private playerStartingHP = 10;
@@ -11,8 +11,9 @@ export class GameScene extends Phaser.Scene {
 	private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
 
 	private collectables: Array<Sock> = [];
-	private throwables: ThrowableGroup;
+	private playerProjectiles: ProjectileGroup;
 	private player: Player;
+	private enemy: Enemy;
 
 	private enemyProjectiles: Phaser.GameObjects.Group;
 	private enemies: Phaser.GameObjects.Group;
@@ -61,18 +62,11 @@ export class GameScene extends Phaser.Scene {
 
 		// Colliders
 		this.physics.add.collider(this.player, this.foregroundLayer);
-		this.physics.add.collider(this.throwables, this.foregroundLayer, (group: Throwable) => group.fall());
-
-		// this.physics.add.overlap(
-		// 	this.player,
-		// 	this.enemyProjectiles,
-		// 	this.handlePlayerCollisionWithProjectile,
-		// 	null,
-		// 	this
-		// );
+		
+		this.physics.add.collider(this.playerProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
 
 		this.physics.add.overlap(
-			this.throwables,
+			this.playerProjectiles,
 			this.enemies,
 			this.handleEnemyCollisionWithProjectile,
 			null,
@@ -113,6 +107,7 @@ export class GameScene extends Phaser.Scene {
 	update(): void {
 		// update player
 		this.player.update();
+		this.enemy.update(this.player.x);
 
 		// pick up and update collectables
 		this.collectables = this.collectables.filter(c => {
@@ -174,14 +169,16 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	private createObjects() {
-		this.throwables = new ThrowableGroup(this);
+		this.playerProjectiles = new ProjectileGroup(this, Projectile);
+		this.enemyProjectiles = new ProjectileGroup(this, EnemyProjectile);
+		setTimeout(() => this.throwAtPlayer(), 1200);
 	}
 
 	private createEvents() {
 		this.input.on('pointerdown', () => this.throwThrowable());
 	}
 
-	private handleEnemyCollisionWithProjectile(enemy: Enemy, proj: Throwable) {
+	private handleEnemyCollisionWithProjectile(enemy: Enemy, proj: Projectile) {
 		if (!proj.active) return;
 
 		this.updateHealth(enemy, -1);
@@ -193,8 +190,15 @@ export class GameScene extends Phaser.Scene {
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
-			this.throwables.sendIt(this.player.x, this.player.y);
+			this.playerProjectiles.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
+		}
+	}
+
+	private throwAtPlayer() {
+		if (this.enemy.active) {
+			this.enemyProjectiles.sendIt(this.enemy.x, this.enemy.y, this.player);
+			setTimeout(() => this.throwAtPlayer(), 1200);
 		}
 	}
 
