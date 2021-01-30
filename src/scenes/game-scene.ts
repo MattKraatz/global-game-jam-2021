@@ -1,6 +1,6 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
-import { ThrowableGroup } from '../objects/throwable';
+import { Throwable, ThrowableGroup } from '../objects/throwable';
 
 export class GameScene extends Phaser.Scene {
 	// tilemap
@@ -45,6 +45,7 @@ export class GameScene extends Phaser.Scene {
 
 		// Colliders
 		this.physics.add.collider(this.player, this.foregroundLayer);
+		this.physics.add.collider(this.throwables, this.foregroundLayer, (group: Throwable) => group.fall());
 
 		// Camera
 		this.cameras.main.startFollow(this.player);
