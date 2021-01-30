@@ -1,6 +1,5 @@
 {
 	"preload": {
-
 		"files": [
 			{
 				"type": "spritesheet",
@@ -39,6 +38,11 @@
 				"type": "image",
 				"key": "sneakerhead tileset",
 				"url": "./assets/images/tileset-extruded.png"
+			},
+			{
+				"type": "audio",
+				"key": "main theme",
+				"url": "./assets/audio/Sneakerheads_MT.mp3"
 			}
 		]
 	}

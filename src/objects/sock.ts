@@ -32,7 +32,6 @@ export class Sock extends Phaser.GameObjects.Sprite {
 		var gameScene : GameScene = (<GameScene>this.scene);
 		this.setFlipX(gameScene.lastSockWasFlipped);
 		gameScene.lastSockWasFlipped = !gameScene.lastSockWasFlipped;
-		console.log((<GameScene>this.scene).lastSockWasFlipped);
 	}
 
 	private initEvents(): void {}
