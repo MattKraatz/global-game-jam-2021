@@ -1,17 +1,24 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
 import { Throwable, ThrowableGroup } from '../objects/throwable';
+import { HealthObject} from '../objects/healthObject.ts';
 
 export class GameScene extends Phaser.Scene {
 	// tilemap
+	private playerStartingHP = 10;
+
 	private map: Phaser.Tilemaps.Tilemap;
 	private tileset: Phaser.Tilemaps.Tileset;
 	private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
 	private collectables: Array<Sock>;
 	private throwables: ThrowableGroup;
-	private ammoText: Phaser.GameObjects.Text;
-	private ammo: number;
 	private player: Player;
+
+	private healthObjects: HealthObject[] = [];
+	private hpText: Phaser.GameObjects.Text;
+
+	private ammo: number;
+	private ammoText: Phaser.GameObjects.Text;
 
 	public lastSockWasFlipped = false;
 
@@ -67,6 +74,14 @@ export class GameScene extends Phaser.Scene {
 		});
 		this.ammoText.scrollFactorX = 0;
 		this.ammoText.scrollFactorY = 0;
+
+		this.hpText = this.add.text(2, 10, 'HP: ' + this.healthObjects[0].hp.toString(), {
+			fontFamily: 'Arial',
+			fontSize: 10,
+			fill: '#ffffff'
+		});
+		this.hpText.scrollFactorX = 0;
+		this.hpText.scrollFactorY = 0;
 	}
 
 	update(): void {
@@ -100,8 +115,13 @@ export class GameScene extends Phaser.Scene {
 			y: this.sys.canvas.height / 2,
 			texture: 'player'
 		});
+		this.createHealthObject(this.playerStartingHP, this.player);
 	}
 
+	private createHealthObject(hp: number, obj: object) {
+		var hpObj = new HealthObject(hp, obj);
+		this.healthObjects.push(hpObj);
+	}
 	private createEvents() {
 		this.input.keyboard.on('keydown-SPACE', () => this.throwThrowable())
 	}
@@ -113,6 +133,10 @@ export class GameScene extends Phaser.Scene {
 	private updateCoinStatus(): void {
 		this.ammo++;
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
+	}
+
+	private updateHealthHudText(): void {
+		this.hpText.setText('HP: ' + this.healthObjects[0].hp.toString());
 	}
 
 	private createSocks(howMany: number) {
