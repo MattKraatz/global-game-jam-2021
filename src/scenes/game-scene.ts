@@ -105,6 +105,9 @@ export class GameScene extends Phaser.Scene {
 		});
 		this.hpText.scrollFactorX = 0;
 		this.hpText.scrollFactorY = 0;
+		
+		// set default cursor
+		this.input.setDefaultCursor('url(assets/images/crosshair.png), pointer')
 	}
 
 	update(): void {
@@ -190,7 +193,7 @@ export class GameScene extends Phaser.Scene {
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
-			this.throwables.sendIt(this.player.x, this.player.y, this.player.angle);
+			this.throwables.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
 		}
 	}
