@@ -13,10 +13,10 @@ export class GameScene extends Phaser.Scene {
 	private collectables: Array<Sock> = [];
 	private playerProjectiles: ProjectileGroup;
 	private player: Player;
-	private enemy: Enemy;
+	private enemies: Array<Enemy> = [];
 
-	private enemyProjectiles: Phaser.GameObjects.Group;
-	private enemies: Phaser.GameObjects.Group;
+	private enemyProjectiles: ProjectileGroup;
+	private enemyGroup: Phaser.GameObjects.Group;
 
 	private healths = new Map<Phaser.GameObjects.Sprite, number>();
 	private hpText: Phaser.GameObjects.Text;
@@ -50,8 +50,7 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.foregroundLayer.setName('Tile Layer 1');
 
-		this.enemies = this.add.group();
-		this.enemyProjectiles = this.add.group();
+		this.enemyGroup = this.add.group();
 
 		this.createObjects();
 		this.loadObjectsFromTilemap();
@@ -67,7 +66,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.physics.add.overlap(
 			this.playerProjectiles,
-			this.enemies,
+			this.enemyGroup,
 			this.handleEnemyCollisionWithProjectile,
 			null,
 			this
@@ -107,7 +106,14 @@ export class GameScene extends Phaser.Scene {
 	update(): void {
 		// update player
 		this.player.update();
-		this.enemy.update(this.player.x);
+
+		// update enemies
+		var i = this.enemies.length - 1;
+		while (i > 0) {
+			var enemy : Enemy = this.enemies[i];
+			enemy.update(this.player.x);
+			i--;
+		}
 
 		// pick up and update collectables
 		this.collectables = this.collectables.filter(c => {
@@ -160,7 +166,8 @@ export class GameScene extends Phaser.Scene {
 						y: object.y,
 						texture: 'enemy'
 					});
-					this.enemies.add(enemy);
+					this.enemies.push(enemy);
+					this.enemyGroup.add(enemy);
 					this.healths.set(enemy, 3);
 					break;
 				}
@@ -195,11 +202,18 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
+	// TODO: Make them not all shoot at once.
 	private throwAtPlayer() {
-		if (this.enemy.active) {
-			this.enemyProjectiles.sendIt(this.enemy.x, this.enemy.y, this.player);
-			setTimeout(() => this.throwAtPlayer(), 1200);
+		var i = this.enemies.length - 1;
+		console.log('enemy length: ' + i);
+		while (i > 0) {
+			var enemy : Enemy = this.enemies[i];
+			if (enemy.active) {
+				this.enemyProjectiles.sendIt(enemy.x, enemy.y, this.player);
+			}
+			i--;
 		}
+		setTimeout(() => this.throwAtPlayer(), 1200);
 	}
 
 	private updateAmmoStatus(amount: number, increase: boolean = true): void {

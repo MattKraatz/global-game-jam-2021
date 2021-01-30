@@ -48,11 +48,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 		this.setActive(true);
         this.setVisible(true);
 
-        // The timeout was seemingly the cause of a bug that prevented
+        // BUG: The timeout is seemingly the cause of a bug that prevents
         // collision with enemies from being detected sometimes. We should
         // probably just let projectiles go until they exit the map anyway.
-        //
-        // setTimeout(() => this.fall(), thisa.fallTime);
+        setTimeout(() => this.fall(), this.fallTime);
 
         const cursor = this.getCursorPosition();
 
