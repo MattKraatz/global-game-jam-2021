@@ -1,6 +1,5 @@
 {
 	"preload": {
-
 		"files": [
 			{
 				"type": "spritesheet",
@@ -9,6 +8,15 @@
 				"frameConfig": {
 					"frameWidth": 16,
 					"frameHeight": 17
+				}
+			},
+			{
+				"type": "spritesheet",
+				"key": "playerProjectile",
+				"url": "./assets/images/player projectile.png",
+				"frameConfig": {
+					"frameWidth": 16,
+					"frameHeight": 16
 				}
 			},
 			{
@@ -26,11 +34,6 @@
 				}
 			},
 			{
-				"type": "image",
-				"key": "throwable",
-				"url": "./assets/images/throwable.png"
-			},
-			{
 				"type": "tilemapTiledJSON",
 				"key": "city",
 				"url": "./assets/maps/city.json"
@@ -39,6 +42,11 @@
 				"type": "image",
 				"key": "sneakerhead tileset",
 				"url": "./assets/images/tileset-extruded.png"
+			},
+			{
+				"type": "audio",
+				"key": "main theme",
+				"url": "./assets/audio/Sneakerheads_MT.mp3"
 			}
 		]
 	}
