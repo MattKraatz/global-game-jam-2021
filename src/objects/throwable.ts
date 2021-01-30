@@ -38,8 +38,9 @@ export class Throwable extends Phaser.Physics.Arcade.Sprite {
 
         setTimeout(() => this.fall(), this.fallTime);
 
-        this.setAngle(angle);
-		this.setVelocity(this.velocity);
+        const cursorX = this.scene.cameras.main.scrollX + this.scene.input.activePointer.x;
+        const cursorY = this.scene.cameras.main.scrollY + this.scene.input.activePointer.y;
+        this.scene.physics.moveTo(this, cursorX, cursorY, this.velocity)
     }
     
     fall() {

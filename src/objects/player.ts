@@ -46,28 +46,33 @@ export class Player extends Phaser.GameObjects.Sprite {
 	}
 
 	private handleInput(): void {
-		if (this.cursors.right.isDown && this.cursors.up.isDown) {
+		const right = this.cursors.right.isDown || this.scene.input.keyboard.addKey('D').isDown;
+		const up = this.cursors.up.isDown || this.scene.input.keyboard.addKey('W').isDown;
+		const left = this.cursors.left.isDown || this.scene.input.keyboard.addKey('A').isDown;
+		const down = this.cursors.down.isDown || this.scene.input.keyboard.addKey('S').isDown;
+
+		if (right && up) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);
 			this.body.setVelocityY(-this.diagonalWalkingSpeed);
-		} else if (this.cursors.right.isDown && this.cursors.down.isDown) {
+		} else if (right && down) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);
 			this.body.setVelocityY(this.diagonalWalkingSpeed);
-		} else if (this.cursors.right.isDown) {
+		} else if (right) {
 			this.body.setVelocityX(this.walkingSpeed);
 			this.body.setVelocityY(0);
-		} else if (this.cursors.left.isDown && this.cursors.up.isDown) {
+		} else if (left && up) {
 			this.body.setVelocityX(-this.diagonalWalkingSpeed);
 			this.body.setVelocityY(-this.diagonalWalkingSpeed);
-		} else if (this.cursors.left.isDown && this.cursors.down.isDown) {
+		} else if (left && down) {
 			this.body.setVelocityX(-this.diagonalWalkingSpeed);
 			this.body.setVelocityY(this.diagonalWalkingSpeed);
-		} else if (this.cursors.left.isDown) {
+		} else if (left) {
 			this.body.setVelocityX(-this.walkingSpeed);
 			this.body.setVelocityY(0);
-		} else if (this.cursors.up.isDown) {
+		} else if (up) {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(-this.walkingSpeed);
-		} else if (this.cursors.down.isDown) {
+		} else if (down) {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(this.walkingSpeed);
 		} else {

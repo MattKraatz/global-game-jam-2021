@@ -100,7 +100,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	private createEvents() {
-		this.input.keyboard.on('keydown-SPACE', () => this.throwThrowable())
+		this.input.on('pointerdown', () => this.throwThrowable());
 	}
 
 	private throwThrowable() {
