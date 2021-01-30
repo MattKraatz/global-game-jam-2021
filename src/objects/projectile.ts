@@ -1,9 +1,12 @@
 
 export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
+    private thisType: Function;
+
 	constructor(scene: Phaser.Scene, type: Function) {
 		// Call the super constructor, passing in a world and a scene
 		super(scene.physics.world, scene);
 
+        this.thisType = type;
 		// Initialize the group
 		this.createMultiple({
 			classType: type, // This is the class we create just below
@@ -14,11 +17,15 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
 		});
 	}
 
-	sendIt(x: number, y: number) {
+	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject = null) {
 		// Get the first available sprite in the group
 		const throwable = this.getFirstDead(false);
 		if (throwable) {
-			throwable.sendIt(x, y);
+            if (this.thisType === Projectile) {
+                throwable.sendIt(x, y);
+            } else {
+                throwable.sendIt(x, y, player)
+            }
 		}
 	}
 }

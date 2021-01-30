@@ -82,6 +82,7 @@ export class GameScene extends Phaser.Scene {
 	update(): void {
 		// update player
 		this.player.update();
+		this.enemy.update(this.player.x);
 
 		// pick up collectables
 		this.collectables = this.collectables.filter(c => {
@@ -117,6 +118,7 @@ export class GameScene extends Phaser.Scene {
 			y: this.player.y + 120,
 			texture: 'player'
 		});
+		setTimeout(() => this.throwAtPlayer(), 1200);
 	}
 
 	private createEvents() {
@@ -127,6 +129,13 @@ export class GameScene extends Phaser.Scene {
 		if (this.ammo > 0) {
 			this.playerProjectiles.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
+		}
+	}
+
+	private throwAtPlayer() {
+		if (this.enemy.active) {
+			this.enemyProjectiles.sendIt(this.enemy.x, this.enemy.y, this.player);
+			setTimeout(() => this.throwAtPlayer(), 1200);
 		}
 	}
 

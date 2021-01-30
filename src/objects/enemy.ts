@@ -42,7 +42,13 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		this.currentScene.physics.world.enable(this);
 	}
 
-	update(): void { }
+	update(lookX: number): void {
+		if (lookX < this.x) {
+			this.setFlip(true, false);
+		} else {
+			this.setFlip(false, false);
+		}
+	}
 
 	private updateVelocity(): void {
 		this.xyDirection = {
