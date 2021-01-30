@@ -45,10 +45,6 @@ export class Player extends Phaser.GameObjects.Sprite {
 		this.handleInput();
 	}
 
-	update(): void {
-		this.handleInput();
-	}
-
 	private handleInput(): void {
 		if (this.cursors.right.isDown && this.cursors.up.isDown) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);
@@ -74,9 +70,6 @@ export class Player extends Phaser.GameObjects.Sprite {
 		} else if (this.cursors.down.isDown) {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(this.walkingSpeed);
-		} else {
-			this.body.setVelocityX(0);
-			this.body.setVelocityY(0);
 		} else {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(0);

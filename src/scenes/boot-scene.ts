@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import { AnimationHelper } from '../helpers/animation-helper';
 
-=======
->>>>>>> origin/main
 export class BootScene extends Phaser.Scene {
 	// helpers
 
