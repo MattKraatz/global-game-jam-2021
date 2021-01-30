@@ -1,0 +1,26 @@
+{
+  "anims": [
+    {
+      "key": "PlayerWalk",
+      "frames": {
+        "typeOfGeneration": "generateFrameNumbers",
+        "key": "player",
+        "start": 1,
+        "end": 4
+      },
+      "repeat": -1,
+      "frameRate": 18
+    },
+    {
+      "key": "PlayerIdle",
+      "frames": {
+        "typeOfGeneration": "generateFrameNumbers",
+        "key": "player",
+        "start": 0,
+        "end": 0
+      },
+      "repeat": 0,
+      "frameRate": 18
+    }
+  ]
+}
