@@ -80,7 +80,7 @@ export class GameScene extends Phaser.Scene {
 				)
 			) {
 				c.destroy();
-				this.updateCoinStatus();
+				this.updateAmmoStatus(1);
 				return false;
 			} else {
 				return true;
@@ -90,7 +90,7 @@ export class GameScene extends Phaser.Scene {
 
 	private createObjects() {
 		this.throwables = new ThrowableGroup(this);
-		this.collectables = this.createSocks(12);
+		this.collectables = this.createSocks(60sd);
 		this.player = new Player({
 			scene: this,
 			x: this.sys.canvas.width / 2,
@@ -104,11 +104,18 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	private throwThrowable() {
-		this.throwables.sendIt(this.player.x, this.player.y, this.player.angle);
+		if (this.ammo > 0) {
+			this.throwables.sendIt(this.player.x, this.player.y, this.player.angle);
+			this.updateAmmoStatus(1, false);
+		}
 	}
 
-	private updateCoinStatus(): void {
-		this.ammo++;
+	private updateAmmoStatus(amount: number, increase: boolean = true): void {
+		if (increase) {
+			this.ammo++;
+		} else {
+			this.ammo--;
+		}
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
 	}
 
@@ -118,8 +125,8 @@ export class GameScene extends Phaser.Scene {
 			socks.push(
 				new Sock({
 					scene: this,
-					x: Phaser.Math.RND.integerInRange(100, 700),
-					y: Phaser.Math.RND.integerInRange(100, 500),
+					x: Phaser.Math.RND.integerInRange(100, this.map.widthInPixels - 100),
+					y: Phaser.Math.RND.integerInRange(100, this.map.heightInPixels - 100),
 					texture: 'sock'
 				})
 			);
