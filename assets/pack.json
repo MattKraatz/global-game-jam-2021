@@ -13,8 +13,8 @@
       },
       {
         "type": "image",
-        "key": "background",
-        "url": "./assets/images/background.png"
+        "key": "throwable",
+        "url": "./assets/images/throwable.png"
       },
       {
         "type": "tilemapTiledJSON",

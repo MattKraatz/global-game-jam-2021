@@ -37,6 +37,9 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.foregroundLayer.setName('Tile Layer 1');
 
+		this.createObjects();
+		this.createEvents();
+
 		// set collision for tiles with the property collide set to true
 		this.foregroundLayer.setCollisionByProperty({ collide: true });
 
@@ -84,8 +87,23 @@ export class GameScene extends Phaser.Scene {
 		});
 	}
 
-	private throwThrowable(event: any) {
-		this.throwables.sendIt(this.player.x, this.player.y);
+	private createObjects() {
+		this.throwables = new ThrowableGroup(this);
+		this.collectables = this.createSocks(12);
+		this.player = new Player({
+			scene: this,
+			x: this.sys.canvas.width / 2,
+			y: this.sys.canvas.height / 2,
+			texture: 'player'
+		});
+	}
+
+	private createEvents() {
+		this.input.keyboard.on('keydown-SPACE', () => this.throwThrowable())
+	}
+
+	private throwThrowable() {
+		this.throwables.sendIt(this.player.x, this.player.y, this.player.angle);
 	}
 
 	private updateCoinStatus(): void {
