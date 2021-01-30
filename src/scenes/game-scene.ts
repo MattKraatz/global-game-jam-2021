@@ -13,6 +13,8 @@ export class GameScene extends Phaser.Scene {
 	private ammo: number;
 	private player: Player;
 
+	public lastSockWasFlipped = false;
+
 	constructor() {
 		super({
 			key: 'GameScene'
@@ -73,6 +75,7 @@ export class GameScene extends Phaser.Scene {
 
 		// pick up collectables
 		this.collectables = this.collectables.filter(c => {
+			c.update();
 			if (
 				Phaser.Geom.Intersects.RectangleToRectangle(
 					this.player.getBounds(),

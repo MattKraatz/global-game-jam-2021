@@ -1,41 +1,45 @@
 {
-  "preload": {
+	"preload": {
 
-    "files": [
-      {
-        "type": "spritesheet",
-        "key": "player",
-        "url": "./assets/images/player.png",
-        "frameConfig": {
-          "frameWidth": 16,
-          "frameHeight": 17
-        }
-      },
-      {
-        "type": "json",
-        "key": "animationJSON",
-        "url": "./assets/animations/animations.json"
-      },
-      {
-        "type": "image",
-        "key": "sock",
-        "url": "./assets/images/sock.png"
-      },
-      {
-        "type": "image",
-        "key": "throwable",
-        "url": "./assets/images/throwable.png"
-      },
-      {
-        "type": "tilemapTiledJSON",
-        "key": "city",
-        "url": "./assets/maps/city.json"
-      },
-      {
-        "type": "image",
-        "key": "sneakerhead tileset",
-        "url": "./assets/images/tileset-extruded.png"
-      }
-    ]
-  }
+		"files": [
+			{
+				"type": "spritesheet",
+				"key": "player",
+				"url": "./assets/images/player.png",
+				"frameConfig": {
+					"frameWidth": 16,
+					"frameHeight": 17
+				}
+			},
+			{
+				"type": "json",
+				"key": "animationJSON",
+				"url": "./assets/animations/animations.json"
+			},
+			{
+				"type": "spritesheet",
+				"key": "sock",
+				"url": "./assets/images/sock.png",
+				"frameConfig": {
+					"frameWidth": 16,
+					"frameHeight": 16
+				}
+			},
+			{
+				"type": "image",
+				"key": "throwable",
+				"url": "./assets/images/throwable.png"
+			},
+			{
+				"type": "tilemapTiledJSON",
+				"key": "city",
+				"url": "./assets/maps/city.json"
+			},
+			{
+				"type": "image",
+				"key": "sneakerhead tileset",
+				"url": "./assets/images/tileset-extruded.png"
+			}
+		]
+	}
 }
