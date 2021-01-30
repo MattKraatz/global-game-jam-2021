@@ -7,14 +7,14 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
 	version: '0.1',
 	width: 320,
 	height: 240,
-	zoom: 3,
+	zoom: 2,
 	type: Phaser.AUTO,
 	parent: 'game',
 	scene: [BootScene, GameScene],
 	physics: {
 		default: 'arcade',
 		arcade: {
-			debug: false
+			debug: true
 		}
 	},
 	input: {

@@ -1,20 +1,23 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
+import { Enemy } from '../objects/enemy';
 import { Throwable, ThrowableGroup } from '../objects/throwable';
-import { HealthObject} from '../objects/healthObject.ts';
 
 export class GameScene extends Phaser.Scene {
-	// tilemap
 	private playerStartingHP = 10;
 
 	private map: Phaser.Tilemaps.Tilemap;
 	private tileset: Phaser.Tilemaps.Tileset;
 	private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
-	private collectables: Array<Sock>;
+
+	private collectables: Array<Sock> = [];
 	private throwables: ThrowableGroup;
 	private player: Player;
 
-	private healthObjects: HealthObject[] = [];
+	private enemyProjectiles: Phaser.GameObjects.Group;
+	private enemies: Phaser.GameObjects.Group;
+
+	private healths = new Map<Phaser.GameObjects.Sprite, number>();
 	private hpText: Phaser.GameObjects.Text;
 
 	private ammo: number;
@@ -46,7 +49,11 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.foregroundLayer.setName('Tile Layer 1');
 
+		this.enemies = this.add.group();
+		this.enemyProjectiles = this.add.group();
+
 		this.createObjects();
+		this.loadObjectsFromTilemap();
 		this.createEvents();
 
 		// set collision for tiles with the property collide set to true
@@ -55,6 +62,22 @@ export class GameScene extends Phaser.Scene {
 		// Colliders
 		this.physics.add.collider(this.player, this.foregroundLayer);
 		this.physics.add.collider(this.throwables, this.foregroundLayer, (group: Throwable) => group.fall());
+
+		// this.physics.add.overlap(
+		// 	this.player,
+		// 	this.enemyProjectiles,
+		// 	this.handlePlayerCollisionWithProjectile,
+		// 	null,
+		// 	this
+		// );
+
+		this.physics.add.overlap(
+			this.throwables,
+			this.enemies,
+			this.handleEnemyCollisionWithProjectile,
+			null,
+			this
+		);
 
 		// Camera
 		this.cameras.main.startFollow(this.player);
@@ -75,7 +98,7 @@ export class GameScene extends Phaser.Scene {
 		this.ammoText.scrollFactorX = 0;
 		this.ammoText.scrollFactorY = 0;
 
-		this.hpText = this.add.text(2, 10, 'HP: ' + this.healthObjects[0].hp.toString(), {
+		this.hpText = this.add.text(2, 10, 'HP: ' + this.healths.get(this.player).toString(), {
 			fontFamily: 'Arial',
 			fontSize: 10,
 			fill: '#ffffff'
@@ -88,7 +111,7 @@ export class GameScene extends Phaser.Scene {
 		// update player
 		this.player.update();
 
-		// pick up collectables
+		// pick up and update collectables
 		this.collectables = this.collectables.filter(c => {
 			c.update();
 			if (
@@ -106,25 +129,64 @@ export class GameScene extends Phaser.Scene {
 		});
 	}
 
-	private createObjects() {
-		this.throwables = new ThrowableGroup(this);
-		this.collectables = this.createSocks(60);
-		this.player = new Player({
-			scene: this,
-			x: this.sys.canvas.width / 2,
-			y: this.sys.canvas.height / 2,
-			texture: 'player'
-		});
-		this.createHealthObject(this.playerStartingHP, this.player);
+	private loadObjectsFromTilemap() {
+		const objects = this.map.getObjectLayer('objects').objects as any[];
+
+		objects.forEach((object) => {
+			switch (object.type) {
+				case "player" : {
+					this.player = new Player({
+						scene: this,
+						x: object.x,
+						y: object.y,
+						texture: 'player'
+					});
+					this.healths.set(this.player, this.playerStartingHP);
+					break;
+				}
+				case "sock" : {
+					this.collectables.push(
+						new Sock({
+							scene: this,
+							x: object.x,
+							y: object.y,
+							texture: 'sock'
+						})
+					);
+					break;
+				}
+				case "enemy" : {
+					var enemy = new Enemy({
+						scene: this,
+						x: object.x,
+						y: object.y,
+						texture: 'enemy'
+					});
+					this.enemies.add(enemy);
+					this.healths.set(enemy, 3);
+					break;
+				}
+			}
+		})
 	}
 
-	private createHealthObject(hp: number, obj: object) {
-		var hpObj = new HealthObject(hp, obj);
-		this.healthObjects.push(hpObj);
+	private createObjects() {
+		this.throwables = new ThrowableGroup(this);
 	}
+
 	private createEvents() {
 		this.input.on('pointerdown', () => this.throwThrowable());
 	}
+
+	private handleEnemyCollisionWithProjectile(enemy: Enemy, proj: Throwable) {
+		if (!proj.active) return;
+
+		this.updateHealth(enemy, -1);
+		proj.fall();
+	}	
+
+	// private handlePlayerCollisionWithProjectile(player: Player, enemyProj: EnemyProjectile) {
+	// }
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
@@ -142,22 +204,21 @@ export class GameScene extends Phaser.Scene {
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
 	}
 
-	private updateHealthHudText(): void {
-		this.hpText.setText('HP: ' + this.healthObjects[0].hp.toString());
+	private updateHealth(obj: Phaser.GameObjects.Sprite, change: number) {
+		var healths = this.healths;
+		if (!healths.has(obj)) return;
+
+		var newHP = healths.get(obj) + change;
+		if (newHP <= 0) {
+			newHP = 0;
+			healths.delete(obj);
+			obj.destroy();
+		} else {
+			healths.set(obj, newHP);
+		}
 	}
 
-	private createSocks(howMany: number) {
-		const socks = [];
-		for (let i = 0; i < howMany; i++) {
-			socks.push(
-				new Sock({
-					scene: this,
-					x: Phaser.Math.RND.integerInRange(100, this.map.widthInPixels - 100),
-					y: Phaser.Math.RND.integerInRange(100, this.map.heightInPixels - 100),
-					texture: 'sock'
-				})
-			);
-		}
-		return socks;
+	private updateHealthHudText(): void {
+		this.hpText.setText('HP: ' + this.healths.get(this.player).toString());
 	}
 }

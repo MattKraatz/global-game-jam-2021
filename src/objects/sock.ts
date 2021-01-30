@@ -25,14 +25,13 @@ export class Sock extends Phaser.GameObjects.Sprite {
 	}
 
 	private initImage(): void {
-		this.setOrigin(0.5, 0.5);
+		this.setOrigin(0, 0);
 		this.anims.play("sock", true);
 
 		// Alternate between flipping the sock along the X axis.
 		var gameScene : GameScene = (<GameScene>this.scene);
 		this.setFlipX(gameScene.lastSockWasFlipped);
 		gameScene.lastSockWasFlipped = !gameScene.lastSockWasFlipped;
-		console.log((<GameScene>this.scene).lastSockWasFlipped);
 	}
 
 	private initEvents(): void {}
