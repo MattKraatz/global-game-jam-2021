@@ -5,6 +5,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
 	private currentScene: Phaser.Scene;
 	private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+	private cursorsAlt: any;
 	private walkingSpeed: number;
 	private diagonalWalkingSpeed: number;
 
@@ -39,17 +40,28 @@ export class Player extends Phaser.GameObjects.Sprite {
 
 	private initInput(): void {
 		this.cursors = this.scene.input.keyboard.createCursorKeys();
+		this.cursorsAlt = this.scene.input.keyboard.addKeys('W,S,A,D');
 	}
 
 	update(): void {
+		this.handleFacingDirection();
 		this.handleInput();
 	}
 
+	private handleFacingDirection() {
+		const cursorX = this.scene.cameras.main.scrollX + this.scene.input.activePointer.x;
+		if (cursorX > this.x) {
+			this.setFlip(false, false);
+		} else {
+			this.setFlip(true, false);
+		}
+	}
+
 	private handleInput(): void {
-		const right = this.cursors.right.isDown || this.scene.input.keyboard.addKey('D').isDown;
-		const up = this.cursors.up.isDown || this.scene.input.keyboard.addKey('W').isDown;
-		const left = this.cursors.left.isDown || this.scene.input.keyboard.addKey('A').isDown;
-		const down = this.cursors.down.isDown || this.scene.input.keyboard.addKey('S').isDown;
+		const right = this.cursors.right.isDown || this.cursorsAlt.D.isDown;
+		const up = this.cursors.up.isDown || this.cursorsAlt.W.isDown;
+		const left = this.cursors.left.isDown || this.cursorsAlt.A.isDown;
+		const down = this.cursors.down.isDown || this.cursorsAlt.S.isDown;
 
 		if (right && up) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);

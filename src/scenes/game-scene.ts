@@ -90,7 +90,7 @@ export class GameScene extends Phaser.Scene {
 
 	private createObjects() {
 		this.throwables = new ThrowableGroup(this);
-		this.collectables = this.createSocks(60sd);
+		this.collectables = this.createSocks(60);
 		this.player = new Player({
 			scene: this,
 			x: this.sys.canvas.width / 2,
