@@ -1,6 +1,7 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
-import { Throwable, ThrowableGroup } from '../objects/throwable';
+import { EnemyProjectile, Projectile, ProjectileGroup } from '../objects/projectile';
+import { Enemy } from '../objects/enemy';
 
 export class GameScene extends Phaser.Scene {
 	// tilemap
@@ -8,10 +9,12 @@ export class GameScene extends Phaser.Scene {
 	private tileset: Phaser.Tilemaps.Tileset;
 	private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
 	private collectables: Array<Sock>;
-	private throwables: ThrowableGroup;
+	private playerProjectiles: ProjectileGroup;
+	private enemyProjectiles: ProjectileGroup;
 	private ammoText: Phaser.GameObjects.Text;
 	private ammo: number;
 	private player: Player;
+	private enemy: Enemy;
 
 	public lastSockWasFlipped = false;
 
@@ -47,7 +50,11 @@ export class GameScene extends Phaser.Scene {
 
 		// Colliders
 		this.physics.add.collider(this.player, this.foregroundLayer);
-		this.physics.add.collider(this.throwables, this.foregroundLayer, (group: Throwable) => group.fall());
+		this.physics.add.collider(this.playerProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
+		this.physics.add.collider(this.playerProjectiles, this.enemy, (enemy: Enemy, projectile: Projectile) => {
+			projectile.fall();
+			enemy.knockout();
+		});
 
 		// Camera
 		this.cameras.main.startFollow(this.player);
@@ -95,12 +102,19 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	private createObjects() {
-		this.throwables = new ThrowableGroup(this);
+		this.playerProjectiles = new ProjectileGroup(this, Projectile);
+		this.enemyProjectiles = new ProjectileGroup(this, EnemyProjectile);
 		this.collectables = this.createSocks(60);
 		this.player = new Player({
 			scene: this,
 			x: this.sys.canvas.width / 2,
 			y: this.sys.canvas.height / 2,
+			texture: 'player'
+		});
+		this.enemy = new Enemy({
+			scene: this,
+			x: this.player.x + 150,
+			y: this.player.y + 120,
 			texture: 'player'
 		});
 	}
@@ -111,7 +125,7 @@ export class GameScene extends Phaser.Scene {
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
-			this.throwables.sendIt(this.player.x, this.player.y);
+			this.playerProjectiles.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
 		}
 	}
