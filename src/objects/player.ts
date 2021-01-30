@@ -5,6 +5,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
 	private currentScene: Phaser.Scene;
 	private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+	private cursorsAlt: any;
 	private walkingSpeed: number;
 	private diagonalWalkingSpeed: number;
 
@@ -39,35 +40,51 @@ export class Player extends Phaser.GameObjects.Sprite {
 
 	private initInput(): void {
 		this.cursors = this.scene.input.keyboard.createCursorKeys();
+		this.cursorsAlt = this.scene.input.keyboard.addKeys('W,S,A,D');
 	}
 
 	update(): void {
+		this.handleFacingDirection();
 		this.handleInput();
 	}
 
+	private handleFacingDirection() {
+		const cursorX = this.scene.cameras.main.scrollX + this.scene.input.activePointer.x;
+		if (cursorX > this.x) {
+			this.setFlip(false, false);
+		} else {
+			this.setFlip(true, false);
+		}
+	}
+
 	private handleInput(): void {
-		if (this.cursors.right.isDown && this.cursors.up.isDown) {
+		const right = this.cursors.right.isDown || this.cursorsAlt.D.isDown;
+		const up = this.cursors.up.isDown || this.cursorsAlt.W.isDown;
+		const left = this.cursors.left.isDown || this.cursorsAlt.A.isDown;
+		const down = this.cursors.down.isDown || this.cursorsAlt.S.isDown;
+
+		if (right && up) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);
 			this.body.setVelocityY(-this.diagonalWalkingSpeed);
-		} else if (this.cursors.right.isDown && this.cursors.down.isDown) {
+		} else if (right && down) {
 			this.body.setVelocityX(this.diagonalWalkingSpeed);
 			this.body.setVelocityY(this.diagonalWalkingSpeed);
-		} else if (this.cursors.right.isDown) {
+		} else if (right) {
 			this.body.setVelocityX(this.walkingSpeed);
 			this.body.setVelocityY(0);
-		} else if (this.cursors.left.isDown && this.cursors.up.isDown) {
+		} else if (left && up) {
 			this.body.setVelocityX(-this.diagonalWalkingSpeed);
 			this.body.setVelocityY(-this.diagonalWalkingSpeed);
-		} else if (this.cursors.left.isDown && this.cursors.down.isDown) {
+		} else if (left && down) {
 			this.body.setVelocityX(-this.diagonalWalkingSpeed);
 			this.body.setVelocityY(this.diagonalWalkingSpeed);
-		} else if (this.cursors.left.isDown) {
+		} else if (left) {
 			this.body.setVelocityX(-this.walkingSpeed);
 			this.body.setVelocityY(0);
-		} else if (this.cursors.up.isDown) {
+		} else if (up) {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(-this.walkingSpeed);
-		} else if (this.cursors.down.isDown) {
+		} else if (down) {
 			this.body.setVelocityX(0);
 			this.body.setVelocityY(this.walkingSpeed);
 		} else {

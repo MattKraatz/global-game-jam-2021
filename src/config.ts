@@ -2,8 +2,8 @@ import { BootScene } from './scenes/boot-scene';
 import { GameScene } from './scenes/game-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
-	title: 'Sneaker Heads',
-	url: 'https://github.com/MattKraatz/global-game-jam-2021',
+	title: 'Sneakerheads',
+	url: 'https://github.com/MattKraatz/sneakerheads',
 	version: '0.1',
 	width: 320,
 	height: 240,
