@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <object name="enemy" type="enemy" width="16" height="16">
+  <properties>
+   <property name="fireRate" type="float" value="1000"/>
+   <property name="fireVel" type="float" value="50"/>
+   <property name="hp" type="int" value="3"/>
+   <property name="walkVel" type="float" value="20"/>
+   <property name="walkX" type="int" value="0"/>
+   <property name="walkY" value="0"/>
+  </properties>
+ </object>
+</template>
