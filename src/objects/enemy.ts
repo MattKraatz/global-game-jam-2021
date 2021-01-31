@@ -1,4 +1,4 @@
-import { ISpriteConstructor } from '../interfaces/sprite.interface';
+import { IEnemySpriteConstructor, ISpriteConstructor } from '../interfaces/sprite.interface';
 import { Player } from './player';
 import { ProjectileGroup } from './projectile';
 
@@ -23,9 +23,12 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 	private projectiles: ProjectileGroup;
 	private player: Player;
 	private walkingSpeed: number;
-	private xyDirection: { x: number, y: number };
+	private xyOrigin: { x: number, y: number };
+	private xyDestination: { x: number, y: number };
+	private fireRate: number;
+	private fireVelocity: number;
 
-	constructor(aParams: ISpriteConstructor) {
+	constructor(aParams: IEnemySpriteConstructor) {
 		super(
 			aParams.scene,
 			aParams.x,
@@ -34,23 +37,13 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 			aParams.frame
 		);
 
-		this.initVariables();
 		this.currentScene = aParams.scene;
 		this.initImage();
 
 		this.scene.add.existing(this);
 		this.body.setSize(8, 12);
 		this.body.setOffset(4, 5);
-		this.updateVelocity();
-	}
-
-	private initVariables(): void {
-		this.walkingSpeed = 40;
-
-		this.xyDirection = {
-			x: Phaser.Math.Between(-1, 1),
-			y: Phaser.Math.Between(-1, 1)
-		}
+		this.initVariables(aParams);
 	}
 
 	private initImage(): void {
@@ -59,17 +52,25 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		this.currentScene.physics.world.enable(this);
 	}
 
+	private initVariables(aParams: IEnemySpriteConstructor) {
+		this.walkingSpeed = aParams.walkVel;
+		this.xyOrigin = { x: aParams.x, y: aParams.y };
+		this.xyDestination = { x: aParams.x + aParams.moveX, y: aParams.y + aParams.moveY };
+		this.fireRate = aParams.fireRate;
+		this.fireVelocity = aParams.fireVel;
+	}
+
 	initThrowing(projectiles: ProjectileGroup, player: Player): void {
 		this.projectiles = projectiles;
 		this.player = player;
 
-		this.scene.time.delayedCall(Phaser.Math.Between(800,2000), this.throwAtPlayer, null, this);
+		this.scene.time.delayedCall(this.fireRate, this.throwAtPlayer, null, this);
 	}
 
 	private throwAtPlayer() {
 		if (this.active) {
-			this.projectiles.sendIt(this.x, this.y, this.player);
-			this.scene.time.delayedCall(Phaser.Math.Between(800,2000), this.throwAtPlayer, null, this);
+			this.projectiles.sendIt(this.x, this.y, this.player, this.fireVelocity);
+			this.scene.time.delayedCall(this.fireRate, this.throwAtPlayer, null, this);
 		}
 	}
 	
@@ -79,17 +80,15 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		} else {
 			this.setFlip(false, false);
 		}
+		this.updateMovement();
 	}
 
-	private updateVelocity(): void {
-		this.xyDirection = {
-			x: this.xyDirection.x * -1,
-			y: this.xyDirection.y * -1
-		}
-		if (this.body) {
-			this.body.setVelocityX(this.xyDirection.x * this.walkingSpeed);
-			this.body.setVelocityY(this.xyDirection.y * this.walkingSpeed);
-			setTimeout(() => this.updateVelocity(), 900);
+	private updateMovement(): void {
+		if (!this.body) return;
+		if (this.x === this.xyOrigin.x && this.y === this.xyOrigin.y) {
+			this.scene.physics.moveTo(this, this.xyDestination.x, this.xyDestination.y, this.walkingSpeed);
+		} else if (this.x === this.xyDestination.x && this.y === this.xyDestination.y) {
+			this.scene.physics.moveTo(this, this.xyOrigin.x, this.xyOrigin.y, this.walkingSpeed);
 		}
 	}
 

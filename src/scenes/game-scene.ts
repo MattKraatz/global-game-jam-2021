@@ -89,7 +89,6 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.topLayer.setName('top');
 
-		this.enemyGroup = this.add.group();
 		this.createObjects();
 		this.createEvents();
 
@@ -109,7 +108,7 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.collider(this.playerProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
     
 		this.physics.add.collider(this.enemyProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
-    this.physics.add.collider(this.enemyProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
+    	this.physics.add.collider(this.enemyProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
 
 
 		this.physics.add.overlap(
@@ -166,6 +165,7 @@ export class GameScene extends Phaser.Scene {
 		// update player
 		this.player.update();
 		this.playerProjectiles.update();
+		this.enemyProjectiles.update();
 
 		// update enemies
 		this.enemyGroup.update(this.player.x);
@@ -220,10 +220,15 @@ export class GameScene extends Phaser.Scene {
 						scene: this,
 						x: object.x,
 						y: object.y,
-						texture: 'enemy'
+						texture: 'enemy',
+						moveX: object.properties.moveX,
+						moveY: object.properties.moveY,
+						walkVel: object.properties.walkVel,
+						fireRate: object.properties.fireRate,
+						fireVel: object.properties.fireVel
 					});
 					this.enemyGroup.add(enemy);
-					this.healths.set(enemy, 3);
+					this.healths.set(enemy, object.properties.hp);
 					break;
 				}
 			}
