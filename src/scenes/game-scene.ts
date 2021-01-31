@@ -116,6 +116,7 @@ export class GameScene extends Phaser.Scene {
 		// update player
 		this.player.update();
 		this.playerProjectiles.update();
+		this.enemyProjectiles.update();
 
 		// update enemies
 		this.enemyGroup.update(this.player.x);
@@ -170,10 +171,15 @@ export class GameScene extends Phaser.Scene {
 						scene: this,
 						x: object.x,
 						y: object.y,
-						texture: 'enemy'
+						texture: 'enemy',
+						moveX: object.properties.moveX,
+						moveY: object.properties.moveY,
+						walkVel: object.properties.walkVel,
+						fireRate: object.properties.fireRate,
+						fireVel: object.properties.fireVel
 					});
 					this.enemyGroup.add(enemy);
-					this.healths.set(enemy, 3);
+					this.healths.set(enemy, object.properties.hp);
 					break;
 				}
 			}

@@ -18,14 +18,14 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
 		});
 	}
 
-	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject = null) {
+	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject = null, velocity: number = null) {
 		// Get the first available sprite in the group
         const throwable = this.getFirstDead(false);
 		if (throwable) {
             if (this.thisType === Projectile) {
                 throwable.sendIt(x, y);
             } else {
-                throwable.sendIt(x, y, player)
+                throwable.sendIt(x, y, player, velocity);
             }
 		}
     }
@@ -33,10 +33,10 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
     update() {
         const camera = this.scene.cameras.main;
         const bounds = {
-            top: camera.midPoint.y - (camera.height / 2),
-            bottom: camera.midPoint.y + (camera.height / 2),
-            left: camera.midPoint.x - (camera.width / 2),
-            right: camera.midPoint.x + (camera.width / 2),
+            top: camera.midPoint.y - (camera.height),
+            bottom: camera.midPoint.y + (camera.height),
+            left: camera.midPoint.x - (camera.width),
+            right: camera.midPoint.x + (camera.width),
         }
         this.children.entries.forEach((proj: Projectile) => {
             if (proj.active) {
@@ -74,8 +74,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     }
     
     fall() {
-        this.body.setVelocityX(0);
-        this.body.setVelocityY(0);
+        this.body.setVelocity(0);
 
         // see ya later
         this.body.reset(-1000, -1000);
@@ -94,8 +93,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
 export class EnemyProjectile extends Phaser.Physics.Arcade.Sprite {
     body: Phaser.Physics.Arcade.Body;
-    private velocity: number = 240;
-    private fallTime: number = 420; //ms
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'npcProjectile');
@@ -103,16 +100,14 @@ export class EnemyProjectile extends Phaser.Physics.Arcade.Sprite {
         this.anims.play('npcProjectile', true);
     }
 
-	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject) {
+	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject, velocity: number) {
         this.body.reset(x, y);
         this.setScale(0.75, 0.75);
 
 		this.setActive(true);
         this.setVisible(true);
 
-        setTimeout(() => this.fall(), this.fallTime);
-
-        this.scene.physics.moveTo(this, player.body.position.x, player.body.position.y, this.velocity);
+        this.scene.physics.moveTo(this, player.body.position.x, player.body.position.y, velocity);
     }
     
     fall() {
