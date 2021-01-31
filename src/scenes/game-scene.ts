@@ -89,7 +89,6 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.topLayer.setName('top');
 
-		this.enemyGroup = this.add.group();
 		this.createObjects();
 		this.createEvents();
 
@@ -109,7 +108,7 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.collider(this.playerProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
     
 		this.physics.add.collider(this.enemyProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
-    this.physics.add.collider(this.enemyProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
+    	this.physics.add.collider(this.enemyProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
 
 
 		this.physics.add.overlap(
