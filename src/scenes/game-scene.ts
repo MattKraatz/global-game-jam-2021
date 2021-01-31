@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
 	private enemyProjectiles: ProjectileGroup;
 	private enemyGroup: EnemyGroup;
 	private enemyCount: number = 0;
+	private enemyText: Phaser.GameObjects.Text;
 
 	private healths = new Map<Phaser.GameObjects.Sprite, number>();
 	private hpText: Phaser.GameObjects.Text;
@@ -154,6 +155,14 @@ export class GameScene extends Phaser.Scene {
 		});
 		this.hpText.scrollFactorX = 0;
 		this.hpText.scrollFactorY = 0;
+
+		this.enemyText = this.add.text(2, 228, 'Enemies: ' + this.enemyCount.toString(), {
+			fontFamily: 'Arial',
+			fontSize: 10,
+			fill: '#ffffff'
+		});
+		this.enemyText.scrollFactorX = 0;
+		this.enemyText.scrollFactorY = 0;
 		
 		// set default cursor
 		this.input.setDefaultCursor('url(assets/images/crosshair.png), pointer');
@@ -282,6 +291,14 @@ export class GameScene extends Phaser.Scene {
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
 	}
 
+	private updateEnemyStatus(): void {
+		this.sound.add('sfx enemy knocked').play();
+		if (--this.enemyCount <= 0) {
+			this.playerWins();
+		}
+		this.enemyText.setText('Enemies: ' + this.enemyCount.toString());
+	}
+
 	private playerWins() {
 		this.levelMusic.stop();
 		this.sound.add('sfx player win').play({ volume: 0.6 });
@@ -302,10 +319,7 @@ export class GameScene extends Phaser.Scene {
 				this.scene.start("DeathScene");
 			} else {
 				newHP = 0;
-				this.sound.add('sfx enemy knocked').play();
-				if (--this.enemyCount === 0) {
-					this.playerWins();
-				}
+				this.updateEnemyStatus();
 				healths.delete(obj);
 				obj.destroy();
 			}
