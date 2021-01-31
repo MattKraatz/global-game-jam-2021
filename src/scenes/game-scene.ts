@@ -8,7 +8,12 @@ export class GameScene extends Phaser.Scene {
 
 	private map: Phaser.Tilemaps.Tilemap;
 	private tileset: Phaser.Tilemaps.Tileset;
+
 	private foregroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
+	private foregroundLayerAbove: Phaser.Tilemaps.StaticTilemapLayer;
+	private noBulletColLayer: Phaser.Tilemaps.StaticTilemapLayer;
+	private noBulletColLayerAbove: Phaser.Tilemaps.StaticTilemapLayer;
+	private topLayer: Phaser.Tilemaps.StaticTilemapLayer;
 
 	private collectables: Array<Sock> = [];
 	private playerProjectiles: ProjectileGroup;
@@ -42,6 +47,7 @@ export class GameScene extends Phaser.Scene {
 		this.map = this.make.tilemap({ key: 'city' });
 		// add our tileset and layers to our tilemap
 		this.tileset = this.map.addTilesetImage('sneakerhead tileset');
+
 		this.foregroundLayer = this.map.createStaticLayer(
 			'Tile Layer 1',
 			this.tileset,
@@ -49,6 +55,38 @@ export class GameScene extends Phaser.Scene {
 			0
 		);
 		this.foregroundLayer.setName('Tile Layer 1');
+
+		this.foregroundLayerAbove = this.map.createStaticLayer(
+			'above bottom',
+			this.tileset,
+			0,
+			0
+		);
+		this.foregroundLayerAbove.setName('above bottom');
+
+		this.noBulletColLayer = this.map.createStaticLayer(
+			'no bullet col',
+			this.tileset,
+			0,
+			0
+		);
+		this.noBulletColLayer.setName('no bullet col');
+
+		this.noBulletColLayerAbove = this.map.createStaticLayer(
+			'no bullet col 2',
+			this.tileset,
+			0,
+			0
+		);
+		this.noBulletColLayerAbove.setName('no bullet col 2');
+
+		this.topLayer = this.map.createStaticLayer(
+			'top',
+			this.tileset,
+			0,
+			0
+		);
+		this.topLayer.setName('top');
 
 		this.enemyGroup = this.add.group();
 
@@ -58,11 +96,18 @@ export class GameScene extends Phaser.Scene {
 
 		// set collision for tiles with the property collide set to true
 		this.foregroundLayer.setCollisionByProperty({ collide: true });
+		this.foregroundLayerAbove.setCollisionByProperty({ collide: true });
+		this.noBulletColLayer.setCollisionByProperty({ collide: true });
+		this.noBulletColLayerAbove.setCollisionByProperty({ collide: true });
 
 		// Colliders
 		this.physics.add.collider(this.player, this.foregroundLayer);
+		this.physics.add.collider(this.player, this.foregroundLayerAbove);
+		this.physics.add.collider(this.player, this.noBulletColLayer);
+		this.physics.add.collider(this.player, this.noBulletColLayerAbove);
 		
 		this.physics.add.collider(this.playerProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
+		this.physics.add.collider(this.playerProjectiles, this.foregroundLayerAbove, (projectile: Projectile) => projectile.fall());
 
 		this.physics.add.overlap(
 			this.playerProjectiles,
