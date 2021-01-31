@@ -216,19 +216,20 @@ export class GameScene extends Phaser.Scene {
 					break;
 				}
 				case "enemy" : {
+					const props = object.properties as Array<any>;
 					var enemy = new Enemy({
 						scene: this,
 						x: object.x,
 						y: object.y,
 						texture: 'enemy',
-						moveX: object.properties.moveX,
-						moveY: object.properties.moveY,
-						walkVel: object.properties.walkVel,
-						fireRate: object.properties.fireRate,
-						fireVel: object.properties.fireVel
+						moveX: props.find(p => p.name === 'walkX').value,
+						moveY: Number(props.find(p => p.name === 'walkY').value),
+						walkVel: props.find(p => p.name === 'walkVel').value,
+						fireRate: props.find(p => p.name === 'fireRate').value,
+						fireVel: props.find(p => p.name === 'fireVel').value,
 					});
 					this.enemyGroup.add(enemy);
-					this.healths.set(enemy, object.properties.hp);
+					this.healths.set(enemy, props.find(p => p.name === 'hp').value);
 					break;
 				}
 			}

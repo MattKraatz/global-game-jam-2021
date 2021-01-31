@@ -25,6 +25,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 	private walkingSpeed: number;
 	private xyOrigin: { x: number, y: number };
 	private xyDestination: { x: number, y: number };
+	private moveToOrigin: boolean;
 	private fireRate: number;
 	private fireVelocity: number;
 
@@ -56,6 +57,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		this.walkingSpeed = aParams.walkVel;
 		this.xyOrigin = { x: aParams.x, y: aParams.y };
 		this.xyDestination = { x: aParams.x + aParams.moveX, y: aParams.y + aParams.moveY };
+		this.moveToOrigin = true;
 		this.fireRate = aParams.fireRate;
 		this.fireVelocity = aParams.fireVel;
 	}
@@ -84,11 +86,15 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 	}
 
 	private updateMovement(): void {
-		if (!this.body) return;
-		if (this.x === this.xyOrigin.x && this.y === this.xyOrigin.y) {
-			this.scene.physics.moveTo(this, this.xyDestination.x, this.xyDestination.y, this.walkingSpeed);
-		} else if (this.x === this.xyDestination.x && this.y === this.xyDestination.y) {
-			this.scene.physics.moveTo(this, this.xyOrigin.x, this.xyOrigin.y, this.walkingSpeed);
+		const wrapX = Phaser.Math.Wrap(this.x, this.xyOrigin.x, this.xyDestination.x);
+		const wrapY = Phaser.Math.Wrap(this.y, this.xyOrigin.y, this.xyDestination.y);
+		if (!this.body.velocity.x || (!!wrapX && wrapX !== this.x) || !this.body.velocity.y || (!!wrapY && wrapY !== this.y)) {
+			if (this.moveToOrigin) {
+				this.scene.physics.moveTo(this, this.xyOrigin.x, this.xyOrigin.y, this.walkingSpeed);
+			} else {
+				this.scene.physics.moveTo(this, this.xyDestination.x, this.xyDestination.y, this.walkingSpeed);
+			}
+			this.moveToOrigin = !this.moveToOrigin;
 		}
 	}
 
