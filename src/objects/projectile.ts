@@ -20,7 +20,7 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
 
 	sendIt(x: number, y: number, player: Phaser.GameObjects.GameObject = null) {
 		// Get the first available sprite in the group
-		const throwable = this.getFirstDead(false);
+        const throwable = this.getFirstDead(false);
 		if (throwable) {
             if (this.thisType === Projectile) {
                 throwable.sendIt(x, y);
@@ -28,13 +28,32 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
                 throwable.sendIt(x, y, player)
             }
 		}
-	}
+    }
+    
+    update() {
+        const camera = this.scene.cameras.main;
+        const bounds = {
+            top: camera.midPoint.y - (camera.height / 2),
+            bottom: camera.midPoint.y + (camera.height / 2),
+            left: camera.midPoint.x - (camera.width / 2),
+            right: camera.midPoint.x + (camera.width / 2),
+        }
+        this.children.entries.forEach((proj: Projectile) => {
+            if (proj.active) {
+                if (proj.body.position.x < bounds.left
+                    || proj.body.position.x > bounds.right
+                    || proj.body.position.y < bounds.top
+                    || proj.body.position.y > bounds.bottom) {
+                        proj.fall();
+                    }
+            }
+        });
+    }
 }
 
 export class Projectile extends Phaser.Physics.Arcade.Sprite {
     body: Phaser.Physics.Arcade.Body;
-    private velocity: number = 240;
-    private fallTime: number = 600; //ms
+    private velocity: number = 320;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'playerProjectile');
@@ -48,8 +67,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
 		this.setActive(true);
         this.setVisible(true);
-
-        this.scene.time.delayedCall(this.fallTime, this.fall, null, this);
 
         const cursor = this.getCursorPosition();
 

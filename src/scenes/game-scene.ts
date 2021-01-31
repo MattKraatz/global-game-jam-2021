@@ -111,6 +111,7 @@ export class GameScene extends Phaser.Scene {
 	update(): void {
 		// update player
 		this.player.update();
+		this.playerProjectiles.update();
 
 		// update enemies
 		this.enemyGroup.update(this.player.x);
