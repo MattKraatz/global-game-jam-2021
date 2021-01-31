@@ -1,6 +1,7 @@
 import { AnimationHelper } from '../helpers/animation-helper';
 
 export class StartScene extends Phaser.Scene {
+	private mainTheme: Phaser.Sound.BaseSound;
 
 	constructor() {
 		super({
@@ -29,13 +30,14 @@ export class StartScene extends Phaser.Scene {
 	update(): void { }
 
 	private playMusic() {
-		const music = this.sound.add('main theme');
-		music.play({ loop: true });
+		this.mainTheme  = this.sound.add('main theme');
+		this.mainTheme.play({ loop: true, volume: 0.6 });
 	}
 
 	private startScene() {
+		this.mainTheme.stop();
 		const soundEffect = this.sound.add('start game');
-		soundEffect.play();
+		soundEffect.play({ volume: 0.8 });
 		this.scene.start('BootScene');
 	}
 }

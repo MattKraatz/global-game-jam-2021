@@ -65,6 +65,41 @@
 				"type": "audio",
 				"key": "main theme",
 				"url": "./assets/audio/Sneakerheads_MT.mp3"
+			},
+			{
+				"type": "audio",
+				"key": "sfx player throw",
+				"url": "./assets/audio/soundfx/SWSH_Cloth Towel Whoosh Fast 02_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "sfx player hit",
+				"url": "./assets/audio/soundfx/GOREMisc_Egg Break Gore Punch Impact Hit 01_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "sfx player collect",
+				"url": "./assets/audio/soundfx/TOOLHand_Heavy Duty Stapler Set Down Ring Impact Metal 01_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "sfx enemy hit",
+				"url": "./assets/audio/soundfx/GOREFlsh_Meat Squish Flesh Hit Impact 01_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "sfx enemy knocked",
+				"url": "./assets/audio/soundfx/TOOLHand_Heavy Duty Stapler Stapling Close Proximity Sub 01_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "sfx player knocked",
+				"url": "./assets/audio/soundfx/FOLYProp_Balloon Release Air Quickly 01_RUME_NONE.wav"
+			},
+			{
+				"type": "audio",
+				"key": "music level 1",
+				"url": "./assets/audio/Sneakerheads_L1.mp3"
 			}
 		]
 	}
