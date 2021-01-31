@@ -19,4 +19,6 @@ yarn run dev
 ```
 
 # Thanks
+music from Brandon de la Cruz: https://clashville.com/
+sound effects from `NPALL Audio`: https://www.npallaudio.com/
 bootstrapped from `coin-runner` at https://github.com/digitsensitive/phaser3-typescript

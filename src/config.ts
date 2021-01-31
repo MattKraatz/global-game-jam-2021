@@ -2,6 +2,7 @@ import { BootScene } from './scenes/boot-scene';
 import { DeathScene } from './scenes/death-scene';
 import { GameScene } from './scenes/game-scene';
 import { StartScene } from './scenes/start-scene';
+import { WinScene } from './scenes/win-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
 	title: 'Sneakerheads',
@@ -12,7 +13,7 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
 	zoom: 2,
 	type: Phaser.AUTO,
 	parent: 'game',
-	scene: [StartScene, BootScene, GameScene, DeathScene],
+	scene: [StartScene, BootScene, GameScene, DeathScene, WinScene],
 	physics: {
 		default: 'arcade',
 		arcade: {
