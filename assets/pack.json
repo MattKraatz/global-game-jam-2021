@@ -100,6 +100,11 @@
 				"type": "audio",
 				"key": "music level 1",
 				"url": "./assets/audio/Sneakerheads_L1.mp3"
+			},
+			{
+				"type": "audio",
+				"key": "sfx player win",
+				"url": "./assets/audio/soundfx/AIRMisc_Playing The Metal Straw Air Friction Blow Squeal 01_RUME_NONE.wav"
 			}
 		]
 	}

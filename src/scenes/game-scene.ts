@@ -21,6 +21,7 @@ export class GameScene extends Phaser.Scene {
 
 	private enemyProjectiles: ProjectileGroup;
 	private enemyGroup: EnemyGroup;
+	private enemyCount: number = 0;
 
 	private healths = new Map<Phaser.GameObjects.Sprite, number>();
 	private hpText: Phaser.GameObjects.Text;
@@ -229,6 +230,7 @@ export class GameScene extends Phaser.Scene {
 						fireVel: props.find(p => p.name === 'fireVel').value,
 					});
 					this.enemyGroup.add(enemy);
+					this.enemyCount++;
 					this.healths.set(enemy, props.find(p => p.name === 'hp').value);
 					break;
 				}
@@ -280,6 +282,12 @@ export class GameScene extends Phaser.Scene {
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
 	}
 
+	private playerWins() {
+		this.levelMusic.stop();
+		this.sound.add('sfx player win').play({ volume: 0.6 });
+		this.scene.start('WinScene');
+	}
+
 	private updateHealth(obj: Phaser.GameObjects.Sprite, change: number, isPlayer: boolean = false) {
 		var healths = this.healths;
 		if (!healths.has(obj)) return;
@@ -295,6 +303,9 @@ export class GameScene extends Phaser.Scene {
 			} else {
 				newHP = 0;
 				this.sound.add('sfx enemy knocked').play();
+				if (--this.enemyCount === 0) {
+					this.playerWins();
+				}
 				healths.delete(obj);
 				obj.destroy();
 			}
