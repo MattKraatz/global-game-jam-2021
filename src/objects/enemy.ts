@@ -82,7 +82,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		} else {
 			this.setFlip(false, false);
 		}
-		this.updateMovement();
+		//this.updateMovement();
 	}
 
 	private updateMovement(): void {
