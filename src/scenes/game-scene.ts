@@ -1,6 +1,6 @@
 import { Sock } from '../objects/sock';
 import { Player } from '../objects/player';
-import { Enemy } from '../objects/enemy';
+import { Enemy, EnemyGroup } from '../objects/enemy';
 import { EnemyProjectile, Projectile, ProjectileGroup } from '../objects/projectile';
 
 export class GameScene extends Phaser.Scene {
@@ -13,10 +13,9 @@ export class GameScene extends Phaser.Scene {
 	private collectables: Array<Sock> = [];
 	private playerProjectiles: ProjectileGroup;
 	private player: Player;
-	private enemies: Array<Enemy> = [];
 
 	private enemyProjectiles: ProjectileGroup;
-	private enemyGroup: Phaser.GameObjects.Group;
+	private enemyGroup: EnemyGroup;
 
 	private healths = new Map<Phaser.GameObjects.Sprite, number>();
 	private hpText: Phaser.GameObjects.Text;
@@ -50,10 +49,7 @@ export class GameScene extends Phaser.Scene {
 		);
 		this.foregroundLayer.setName('Tile Layer 1');
 
-		this.enemyGroup = this.add.group();
-
 		this.createObjects();
-		this.loadObjectsFromTilemap();
 		this.createEvents();
 
 		// set collision for tiles with the property collide set to true
@@ -63,11 +59,20 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.collider(this.player, this.foregroundLayer);
 		
 		this.physics.add.collider(this.playerProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
+		this.physics.add.collider(this.enemyProjectiles, this.foregroundLayer, (projectile: Projectile) => projectile.fall());
 
 		this.physics.add.overlap(
 			this.playerProjectiles,
 			this.enemyGroup,
 			this.handleEnemyCollisionWithProjectile,
+			null,
+			this
+		);
+
+		this.physics.add.overlap(
+			this.enemyProjectiles,
+			this.player,
+			this.handlePlayerCollisionWithProjectile,
 			null,
 			this
 		);
@@ -108,12 +113,7 @@ export class GameScene extends Phaser.Scene {
 		this.player.update();
 
 		// update enemies
-		var i = this.enemies.length - 1;
-		while (i > 0) {
-			var enemy : Enemy = this.enemies[i];
-			enemy.update(this.player.x);
-			i--;
-		}
+		this.enemyGroup.update(this.player.x);
 
 		// pick up and update collectables
 		this.collectables = this.collectables.filter(c => {
@@ -166,7 +166,6 @@ export class GameScene extends Phaser.Scene {
 						y: object.y,
 						texture: 'enemy'
 					});
-					this.enemies.push(enemy);
 					this.enemyGroup.add(enemy);
 					this.healths.set(enemy, 3);
 					break;
@@ -178,42 +177,35 @@ export class GameScene extends Phaser.Scene {
 	private createObjects() {
 		this.playerProjectiles = new ProjectileGroup(this, Projectile);
 		this.enemyProjectiles = new ProjectileGroup(this, EnemyProjectile);
-		setTimeout(() => this.throwAtPlayer(), 1200);
+		this.enemyGroup = new EnemyGroup(this);
+		this.loadObjectsFromTilemap();
 	}
 
 	private createEvents() {
 		this.input.on('pointerdown', () => this.throwThrowable());
+		this.enemyGroup.initEnemies(this.enemyProjectiles, this.player);
 	}
 
-	private handleEnemyCollisionWithProjectile(enemy: Enemy, proj: Projectile) {
+	private handleEnemyCollisionWithProjectile(proj: Projectile, enemy: Enemy) {
 		if (!proj.active) return;
 
 		this.updateHealth(enemy, -1);
 		proj.fall();
-	}	
+	}
 
-	// private handlePlayerCollisionWithProjectile(player: Player, enemyProj: EnemyProjectile) {
-	// }
+	private handlePlayerCollisionWithProjectile(player: Player, proj: EnemyProjectile) {
+		if (!proj.active) return;
+
+		this.updateHealth(player, -1, true);
+		proj.fall();
+		this.updateHealthHudText();
+	}
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
 			this.playerProjectiles.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
 		}
-	}
-
-	// TODO: Make them not all shoot at once.
-	private throwAtPlayer() {
-		var i = this.enemies.length - 1;
-		console.log('enemy length: ' + i);
-		while (i > 0) {
-			var enemy : Enemy = this.enemies[i];
-			if (enemy.active) {
-				this.enemyProjectiles.sendIt(enemy.x, enemy.y, this.player);
-			}
-			i--;
-		}
-		setTimeout(() => this.throwAtPlayer(), 1200);
 	}
 
 	private updateAmmoStatus(amount: number, increase: boolean = true): void {
@@ -225,15 +217,20 @@ export class GameScene extends Phaser.Scene {
 		this.ammoText.setText('Ammo: ' + this.ammo.toString());
 	}
 
-	private updateHealth(obj: Phaser.GameObjects.Sprite, change: number) {
+	private updateHealth(obj: Phaser.GameObjects.Sprite, change: number, isPlayer: boolean = false) {
 		var healths = this.healths;
 		if (!healths.has(obj)) return;
 
 		var newHP = healths.get(obj) + change;
 		if (newHP <= 0) {
-			newHP = 0;
-			healths.delete(obj);
-			obj.destroy();
+			if (isPlayer) {
+				// game over
+				this.scene.start("DeathScene");
+			} else {
+				newHP = 0;
+				healths.delete(obj);
+				obj.destroy();
+			}
 		} else {
 			healths.set(obj, newHP);
 		}

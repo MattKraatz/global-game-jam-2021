@@ -1,3 +1,4 @@
+import { GameObjects } from "phaser";
 
 export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
     private thisType: Function;
@@ -33,7 +34,7 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
 export class Projectile extends Phaser.Physics.Arcade.Sprite {
     body: Phaser.Physics.Arcade.Body;
     private velocity: number = 240;
-    private fallTime: number = 420; //ms
+    private fallTime: number = 600; //ms
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'playerProjectile');
@@ -48,10 +49,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 		this.setActive(true);
         this.setVisible(true);
 
-        // BUG: The timeout is seemingly the cause of a bug that prevents
-        // collision with enemies from being detected sometimes. We should
-        // probably just let projectiles go until they exit the map anyway.
-        setTimeout(() => this.fall(), this.fallTime);
+        this.scene.time.delayedCall(this.fallTime, this.fall, null, this);
 
         const cursor = this.getCursorPosition();
 
@@ -59,16 +57,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     }
     
     fall() {
-        this.body.reset(0, 0);
-
-        // Setting the angular velocity to 0 wasn't seeming to stop it for some
-        // reason.
         this.body.setVelocityX(0);
         this.body.setVelocityY(0);
 
         // see ya later
-        this.x = -1000;
-        this.y = -1000;
+        this.body.reset(-1000, -1000);
 
         this.setActive(false);
         this.setVisible(false);
@@ -106,9 +99,11 @@ export class EnemyProjectile extends Phaser.Physics.Arcade.Sprite {
     }
     
     fall() {
-        this.body.reset(0, 0);
-        this.setVelocity(0);
-        this.setActive(false);
-		this.setVisible(false);
+        if (this.active) {
+            this.body.reset(0, 0);
+            this.setVelocity(0);
+            this.setActive(false);
+            this.setVisible(false);
+        }
     }
 }
