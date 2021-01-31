@@ -1,9 +1,27 @@
 import { ISpriteConstructor } from '../interfaces/sprite.interface';
+import { Player } from './player';
+import { ProjectileGroup } from './projectile';
+
+export class EnemyGroup extends Phaser.Physics.Arcade.Group {
+	constructor(scene: Phaser.Scene) {
+		super(scene.physics.world, scene);
+	}
+
+	initEnemies(projectiles: ProjectileGroup, player: Player) {
+		this.children.entries.forEach((e: Enemy) => e.initThrowing(projectiles, player))
+	}
+
+	update(playerX: number) {
+		this.children.entries.forEach(e => e.update(playerX));
+	}
+}
 
 export class Enemy extends Phaser.GameObjects.Sprite {
 	body: Phaser.Physics.Arcade.Body;
 
 	private currentScene: Phaser.Scene;
+	private projectiles: ProjectileGroup;
+	private player: Player;
 	private walkingSpeed: number;
 	private xyDirection: { x: number, y: number };
 
@@ -41,6 +59,20 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 		this.currentScene.physics.world.enable(this);
 	}
 
+	initThrowing(projectiles: ProjectileGroup, player: Player): void {
+		this.projectiles = projectiles;
+		this.player = player;
+
+		this.scene.time.delayedCall(Phaser.Math.Between(800,2000), this.throwAtPlayer, null, this);
+	}
+
+	private throwAtPlayer() {
+		if (this.active) {
+			this.projectiles.sendIt(this.x, this.y, this.player);
+			this.scene.time.delayedCall(Phaser.Math.Between(800,2000), this.throwAtPlayer, null, this);
+		}
+	}
+	
 	update(lookX: number): void {
 		if (lookX < this.x) {
 			this.setFlip(true, false);
