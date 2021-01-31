@@ -69,7 +69,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.setVisible(true);
 
         const cursor = this.getCursorPosition();
-
+        
         this.scene.physics.moveTo(this, cursor.x, cursor.y, this.velocity);
     }
     

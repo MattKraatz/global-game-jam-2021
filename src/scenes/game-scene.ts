@@ -23,6 +23,7 @@ export class GameScene extends Phaser.Scene {
 	private ammo: number;
 	private ammoText: Phaser.GameObjects.Text;
 
+	private levelMusic: Phaser.Sound.BaseSound;
 	public lastSockWasFlipped = false;
 
 	constructor() {
@@ -105,7 +106,10 @@ export class GameScene extends Phaser.Scene {
 		this.hpText.scrollFactorY = 0;
 		
 		// set default cursor
-		this.input.setDefaultCursor('url(assets/images/crosshair.png), pointer')
+		this.input.setDefaultCursor('url(assets/images/crosshair.png), pointer');
+
+		this.levelMusic = this.sound.add('music level 1');
+		this.levelMusic.play({ loop: true });
 	}
 
 	update(): void {
@@ -126,6 +130,7 @@ export class GameScene extends Phaser.Scene {
 				)
 			) {
 				c.destroy();
+				this.sound.add('sfx player collect').play({ volume: 0.2 });
 				this.updateAmmoStatus(1);
 				return false;
 			} else {
@@ -204,6 +209,7 @@ export class GameScene extends Phaser.Scene {
 
 	private throwThrowable() {
 		if (this.ammo > 0) {
+			this.sound.add("sfx player throw").play();
 			this.playerProjectiles.sendIt(this.player.x, this.player.y);
 			this.updateAmmoStatus(1, false);
 		}
@@ -225,14 +231,23 @@ export class GameScene extends Phaser.Scene {
 		var newHP = healths.get(obj) + change;
 		if (newHP <= 0) {
 			if (isPlayer) {
+				this.levelMusic.stop();
+				this.sound.add('sfx player knocked').play({ volume: 0.6 });
+
 				// game over
 				this.scene.start("DeathScene");
 			} else {
 				newHP = 0;
+				this.sound.add('sfx enemy knocked').play();
 				healths.delete(obj);
 				obj.destroy();
 			}
 		} else {
+			if (isPlayer) {
+				this.sound.add('sfx player hit').play();
+			} else {
+				this.sound.add('sfx enemy hit').play();
+			}
 			healths.set(obj, newHP);
 		}
 	}
