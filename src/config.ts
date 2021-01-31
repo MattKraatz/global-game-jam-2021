@@ -1,4 +1,5 @@
 import { BootScene } from './scenes/boot-scene';
+import { DeathScene } from './scenes/death-scene';
 import { GameScene } from './scenes/game-scene';
 import { StartScene } from './scenes/start-scene';
 
@@ -11,7 +12,7 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
 	zoom: 2,
 	type: Phaser.AUTO,
 	parent: 'game',
-	scene: [StartScene, BootScene, GameScene],
+	scene: [StartScene, BootScene, GameScene, DeathScene],
 	physics: {
 		default: 'arcade',
 		arcade: {
