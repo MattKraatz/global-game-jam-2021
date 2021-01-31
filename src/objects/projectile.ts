@@ -10,8 +10,8 @@ export class ProjectileGroup extends Phaser.Physics.Arcade.Group {
         this.thisType = type;
 		// Initialize the group
 		this.createMultiple({
-			classType: type, // This is the class we create just below
-			frameQuantity: 30, // Create 30 instances in the pool
+			classType: type, // this is the class we create just below
+			frameQuantity: type === Projectile ? 20 : 100, // number of objects in the pool
 			active: false,
 			visible: false,
             key: 'projectiles'
