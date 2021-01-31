@@ -88,7 +88,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 	private updateMovement(): void {
 		const wrapX = Phaser.Math.Wrap(this.x, this.xyOrigin.x, this.xyDestination.x);
 		const wrapY = Phaser.Math.Wrap(this.y, this.xyOrigin.y, this.xyDestination.y);
-		if (!this.body.velocity.x || (!!wrapX && wrapX !== this.x) || !this.body.velocity.y || (!!wrapY && wrapY !== this.y)) {
+		if ((!this.body.velocity.x && !this.body.velocity.y) || (!!wrapX && wrapX !== this.x) || (!!wrapY && wrapY !== this.y)) {
 			if (this.moveToOrigin) {
 				this.scene.physics.moveTo(this, this.xyOrigin.x, this.xyOrigin.y, this.walkingSpeed);
 			} else {
