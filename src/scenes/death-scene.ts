@@ -13,6 +13,9 @@ export class DeathScene extends Phaser.Scene {
 		const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 		this.add.text(screenCenterX, screenCenterY - 20, 'GAME OVER', { fontSize: '32px' }).setOrigin(0.5);
 
+        const music = this.sound.get('main theme');
+		music.stop();
+
 		// press any key to start
 		this.input.keyboard.on('keydown', () => this.startScene());
 	}
